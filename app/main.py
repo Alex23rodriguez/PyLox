@@ -46,7 +46,7 @@ def main():
     failed = False
 
     for i, line in enumerate(lines):
-        line = line.split("//")[0]  # remove comments
+        line = line.split("//", 1)[0]  # remove comments
         left = 0
         while left < len(line):
             right = left
@@ -61,6 +61,8 @@ def main():
                 left += 1
             else:
                 failed = True
+                print(f"line: {line}")
+                print([ord(c) for c in line])
                 print(
                     f"[line {i+1}] Error: Unexpected character: {line[left]}",
                     file=sys.stderr,
