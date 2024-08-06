@@ -39,6 +39,7 @@ def main():
         "<=": "LESS_EQUAL",
         ">=": "GREATER_EQUAL",
         "/": "SLASH",
+        "//": "_comment_",
     }
 
     skip = [" ", "\t", "\n"]
@@ -46,7 +47,6 @@ def main():
     failed = False
 
     for i, line in enumerate(lines, 1):
-        line = line.split("//", 1)[0]  # remove comments
         left = 0
         while left < len(line):
 
@@ -75,7 +75,10 @@ def main():
 
             if left != right:
                 t = line[left:right]
-                print(f"{tokens[t]} {t} null")
+                token = tokens[t]
+                if token == "_comment_":
+                    break
+                print(f"{token} {t} null")
                 left = right
 
             else:
