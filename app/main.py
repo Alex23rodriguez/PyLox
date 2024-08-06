@@ -19,7 +19,7 @@ def main():
     with open(filename) as file:
         lines = file.readlines()
 
-    chars = {
+    tokens = {
         "(": "LEFT_PAREN",
         ")": "RIGHT_PAREN",
         "{": "LEFT_BRACE",
@@ -30,17 +30,32 @@ def main():
         "+": "PLUS",
         "-": "MINUS",
         "*": "STAR",
+        "=": "EQUAL",
+        "==": "EQUAL_EQUAL",
     }
 
     failed = False
 
     for i, line in enumerate(lines):
-        for c in line:
-            if c in chars:
-                print(f"{chars[c]} {c} null")
+        left = 0
+        while left < len(line):
+            right = left + 1
+            token = None
+            while right <= len(line) and (t := line[left:right]) in tokens:
+                token = tokens[t]
+                right += 1
+
+            if token:
+                print(f"{token} {t} null")
             else:
                 failed = True
-                print(f"[line {i+1}] Error: Unexpected character: {c}", file=sys.stderr)
+                print(
+                    f"[line {i+1}] Error: Unexpected character: {line[left]}",
+                    file=sys.stderr,
+                )
+
+            left += 1
+
     print("EOF  null")
 
     if failed:
