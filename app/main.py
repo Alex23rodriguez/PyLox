@@ -46,7 +46,7 @@ def main():
                 right += 1
 
             if token:
-                print(f"{token} {t} null")
+                print(f"{token} {line[left : right + 1]} null")
             else:
                 failed = True
                 print(
