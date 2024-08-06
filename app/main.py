@@ -46,14 +46,12 @@ def main():
     skip = [" ", "\t", "\n"]
 
     failed = False
-    num_pattern = re.compile("[0-9]+(/.[0.9]+)")
+    num_pattern = re.compile(r"[0-9]+(\.[0.9]+)")
 
     for i, line in enumerate(lines, 1):
         left = 0
         while left < len(line):
-            m = re.match(num_pattern, line[left:])
-            print(m)
-            if m:
+            if m := re.match(num_pattern, line[left:]):
                 n = m.span()[1]
                 num = line[left : left + n]
                 print(f"NUMBER {num} {num}")
