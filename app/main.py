@@ -46,14 +46,14 @@ def main():
             if left != right - 1:
                 t = line[left : right - 1]
                 print(f"{tokens[t]} {t} null")
+                left = right - 1
             else:
                 failed = True
                 print(
                     f"[line {i+1}] Error: Unexpected character: {line[left]}",
                     file=sys.stderr,
                 )
-
-            left = right
+                left += 1
 
     print("EOF  null")
 
