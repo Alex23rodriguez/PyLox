@@ -58,8 +58,7 @@ def main():
                         file=sys.stderr,
                     )
                     failed = True
-                    left += 1
-                    # break
+                    break
                 else:
                     string = line[left + 1 : end]
                     print(f'STRING "{string}" {string}')
