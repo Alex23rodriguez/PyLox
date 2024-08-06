@@ -32,13 +32,19 @@ def main():
         "*": "STAR",
     }
 
+    failed = False
+
     for i, line in enumerate(lines):
         for c in line:
             if c in chars:
                 print(f"{chars[c]} {c} null")
             else:
-                raise NotImplementedError(f"char '{c}' not implemented")
+                failed = True
+                print(f"[line {i+1}] Error: Unexpected character: {c}", file=sys.stderr)
     print("EOF  null")
+
+    if failed:
+        exit(65)
 
 
 if __name__ == "__main__":
