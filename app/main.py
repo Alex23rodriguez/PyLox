@@ -53,7 +53,7 @@ def main():
                     file=sys.stderr,
                 )
 
-            left = right + 1
+            left = right
 
     print("EOF  null")
 
