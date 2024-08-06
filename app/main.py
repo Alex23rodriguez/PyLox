@@ -39,9 +39,9 @@ def main():
     for i, line in enumerate(lines):
         left = 0
         while left < len(line):
-            right = left + 1
+            right = left
             token = None
-            while right <= len(line) and (t := line[left:right]) in tokens:
+            while right < len(line) and (t := line[left : right + 1]) in tokens:
                 token = tokens[t]
                 right += 1
 
