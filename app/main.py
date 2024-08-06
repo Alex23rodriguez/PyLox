@@ -41,6 +41,8 @@ def main():
         "/": "SLASH",
     }
 
+    skip = [" ", "\t"]
+
     failed = False
 
     for i, line in enumerate(lines):
@@ -55,6 +57,8 @@ def main():
                 t = line[left:right]
                 print(f"{tokens[t]} {t} null")
                 left = right
+            elif line[left] in skip:
+                left += 1
             else:
                 failed = True
                 print(
