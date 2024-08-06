@@ -57,7 +57,8 @@ def main():
                         f"[line {i}] Error: Unterminated string.",
                         file=sys.stderr,
                     )
-                    break
+                    failed = True
+                    # break
                 else:
                     string = line[left + 1 : end]
                     print(f'STRING "{string}" {string}')
