@@ -41,7 +41,7 @@ def main():
         "/": "SLASH",
     }
 
-    skip = [" ", "\t"]
+    skip = [ord(" "), ord("\t")]
 
     failed = False
 
@@ -57,11 +57,13 @@ def main():
                 t = line[left:right]
                 print(f"{tokens[t]} {t} null")
                 left = right
-            elif line[left] in skip:
+            elif ord(line[left]) in skip:
+                print(ord(line[left]))
                 left += 1
             else:
                 failed = True
                 print(f"line: {line}")
+                print(ord(line[left]))
                 print([ord(c) for c in line])
                 print(
                     f"[line {i+1}] Error: Unexpected character: {line[left]}",
