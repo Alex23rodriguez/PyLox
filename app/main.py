@@ -51,12 +51,12 @@ def main():
     for i, line in enumerate(lines, 1):
         left = 0
         while left < len(line):
-            if line[left].isdigit():
-                if m := re.match(num_pattern, line[left:]):
-                    n = m.span()[1]
-                    num = line[left : left + n]
-                    print(f"NUMBER {num} {num}")
-                    left += n
+            if m := re.match(num_pattern, line[left:]):
+                n = m.span()[1]
+                num = line[left : left + n]
+                print(f"NUMBER {num} {num}")
+                left += n
+                continue
 
             if line[left] == '"':
                 end = line.find('"', left + 1)
