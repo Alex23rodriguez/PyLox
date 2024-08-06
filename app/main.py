@@ -45,7 +45,7 @@ def main():
 
     failed = False
 
-    for i, line in enumerate(lines):
+    for i, line in enumerate(lines, 1):
         line = line.split("//", 1)[0]  # remove comments
         left = 0
         while left < len(line):
@@ -57,7 +57,8 @@ def main():
                         f"[line {i}] Error: Unterminated string.",
                         file=sys.stderr,
                     )
-                    left += 1
+                    failed = True
+                    break
                 else:
                     string = line[left + 1 : end]
                     print(f'STRING "{string}" {string}')
@@ -80,7 +81,7 @@ def main():
             else:
                 failed = True
                 print(
-                    f"[line {i+1}] Error: Unexpected character: {line[left]}",
+                    f"[line {i}] Error: Unexpected character: {line[left]}",
                     file=sys.stderr,
                 )
                 left += 1
