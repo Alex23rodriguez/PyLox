@@ -17,7 +17,7 @@ def main():
         exit(1)
 
     with open(filename) as file:
-        file_contents = file.read()
+        lines = file.readlines()
 
     chars = {
         "(": "LEFT_PAREN",
@@ -32,17 +32,13 @@ def main():
         "*": "STAR",
     }
 
-    if file_contents:
-        for c in file_contents:
+    for i, line in enumerate(lines):
+        for c in line:
             if c in chars:
                 print(f"{chars[c]} {c} null")
             else:
                 raise NotImplementedError(f"char '{c}' not implemented")
-        print("EOF  null")
-    else:
-        print(
-            "EOF  null"
-        )  # Placeholder, remove this line when implementing the scanner
+    print("EOF  null")
 
 
 if __name__ == "__main__":
