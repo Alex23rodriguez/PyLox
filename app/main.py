@@ -60,7 +60,7 @@ def main():
                     left += 1
                 else:
                     string = line[left + 1 : end]
-                    print(f'STRING "{string}" string')
+                    print(f'STRING "{string}" {string}')
                     left = end + 1
                 continue
 
