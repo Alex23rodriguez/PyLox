@@ -34,6 +34,10 @@ def main():
         "==": "EQUAL_EQUAL",
         "!": "BANG",
         "!=": "BANG_EQUAL",
+        "<": "LESS",
+        ">": "GREATER",
+        "<=": "LESS_EQUAL",
+        ">=": "GREATER_EQUAL",
     }
 
     failed = False
