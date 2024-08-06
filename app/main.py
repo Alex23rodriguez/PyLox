@@ -19,29 +19,23 @@ def main():
     with open(filename) as file:
         file_contents = file.read()
 
-    # Uncomment this block to pass the first stage
+    chars = {
+        "(": "LEFT_PAREN",
+        ")": "RIGHT_PAREN",
+        "{": "LEFT_BRACE",
+        "}": "RIGHT_BRACE",
+        ".": "DOT",
+        ",": "COMMA",
+        ";": "SEMICOLON",
+        "+": "PLUS",
+        "-": "MINUS",
+        "*": "STAR",
+    }
+
     if file_contents:
         for c in file_contents:
-            if c == "(":
-                print("LEFT_PAREN ( null")
-            elif c == ")":
-                print("RIGHT_PAREN ) null")
-            elif c == "{":
-                print("LEFT_BRACE { null")
-            elif c == "}":
-                print("RIGHT_BRACE } null")
-            elif c == ".":
-                print("DOT . null")
-            elif c == ",":
-                print("COMMA , null")
-            elif c == ";":
-                print("SEMICOLON ; null")
-            elif c == "+":
-                print("PLUS + null")
-            elif c == "-":
-                print("MINUS - null")
-            elif c == "*":
-                print("STAR * null")
+            if c in chars:
+                print(f"{chars[c]} {c} null")
             else:
                 raise NotImplementedError(f"char '{c}' not implemented")
         print("EOF  null")
