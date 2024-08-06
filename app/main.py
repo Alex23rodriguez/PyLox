@@ -30,18 +30,20 @@ def main():
                 print("LEFT_BRACE { null")
             elif c == "}":
                 print("RIGHT_BRACE } null")
-            elif c == "*":
-                print("STAR * null")
             elif c == ".":
                 print("DOT . null")
             elif c == ",":
                 print("COMMA , null")
+            elif c == ";":
+                print("SEMICOLON ; null")
             elif c == "+":
                 print("PLUS + null")
+            elif c == "-":
+                print("MINUS - null")
             elif c == "*":
                 print("STAR * null")
             else:
-                raise NotImplementedError("other chars not implemented")
+                raise NotImplementedError(f"char '{c}' not implemented")
         print("EOF  null")
     else:
         print(
