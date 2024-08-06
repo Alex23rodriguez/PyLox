@@ -58,6 +58,7 @@ def main():
                         file=sys.stderr,
                     )
                     failed = True
+                    left += 1
                     # break
                 else:
                     string = line[left + 1 : end]
