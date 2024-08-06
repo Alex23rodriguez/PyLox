@@ -32,6 +32,8 @@ def main():
         "*": "STAR",
         "=": "EQUAL",
         "==": "EQUAL_EQUAL",
+        "!": "BANG",
+        "!=": "BANG_EQUAL",
     }
 
     failed = False
