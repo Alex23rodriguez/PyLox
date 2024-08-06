@@ -26,6 +26,10 @@ def main():
                 print("LEFT_PAREN ( null")
             elif c == ")":
                 print("RIGHT_PAREN ) null")
+            elif c == "{":
+                print("LEFT_BRACE { null")
+            elif c == "}":
+                print("RIGHT_BRACE } null")
             else:
                 raise NotImplementedError("other chars not implemented")
         print("EOF  null")
