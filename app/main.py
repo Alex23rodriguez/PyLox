@@ -39,9 +39,9 @@ def main():
     for i, line in enumerate(lines):
         left = 0
         while left < len(line):
-            right = left
+            right = left + 1
             token = None
-            while right < len(line) and (t := line[left : right + 1]) in tokens:
+            while right <= len(line) and (t := line[left:right]) in tokens:
                 token = tokens[t]
                 right += 1
 
@@ -54,7 +54,7 @@ def main():
                     file=sys.stderr,
                 )
 
-            left += 1
+            left = right
 
     print("EOF  null")
 
