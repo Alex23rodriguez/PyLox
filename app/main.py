@@ -51,7 +51,9 @@ def main():
     for i, line in enumerate(lines, 1):
         left = 0
         while left < len(line):
-            if m := re.match(num_pattern, line[left:]):
+            m = re.match(num_pattern, line[left:])
+            print(m)
+            if m:
                 n = m.span()[1]
                 num = line[left : left + n]
                 print(f"NUMBER {num} {num}")
