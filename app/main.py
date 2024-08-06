@@ -58,7 +58,6 @@ def main():
                 print(f"{tokens[t]} {t} null")
                 left = right
             elif ord(line[left]) in skip:
-                print(ord(line[left]))
                 left += 1
             else:
                 failed = True
