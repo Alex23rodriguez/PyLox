@@ -38,11 +38,13 @@ def main():
         ">": "GREATER",
         "<=": "LESS_EQUAL",
         ">=": "GREATER_EQUAL",
+        "/": "SLASH",
     }
 
     failed = False
 
     for i, line in enumerate(lines):
+        line = line.split("//")[0]  # remove comments
         left = 0
         while left < len(line):
             right = left
