@@ -49,6 +49,25 @@ def main():
         line = line.split("//", 1)[0]  # remove comments
         left = 0
         while left < len(line):
+
+            if line[left] == '"':
+                end = line.find('"', left + 1)
+                if end == -1:
+                    print(
+                        f"[line {i}] Error: Unterminated string.",
+                        file=sys.stderr,
+                    )
+                    left += 1
+                else:
+                    string = line[left + 1 : end]
+                    print(f'STRING "{string}" string')
+                    left = end + 1
+                continue
+
+            elif line[left] in skip:
+                left += 1
+                continue
+
             right = left
             while right < len(line) and line[left : right + 1] in tokens:
                 right += 1
@@ -57,8 +76,7 @@ def main():
                 t = line[left:right]
                 print(f"{tokens[t]} {t} null")
                 left = right
-            elif line[left] in skip:
-                left += 1
+
             else:
                 failed = True
                 print(
@@ -66,6 +84,7 @@ def main():
                     file=sys.stderr,
                 )
                 left += 1
+                continue
 
     print("EOF  null")
 
