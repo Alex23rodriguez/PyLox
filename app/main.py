@@ -40,13 +40,12 @@ def main():
         left = 0
         while left < len(line):
             right = left + 1
-            token = None
-            while right <= len(line) and (t := line[left:right]) in tokens:
-                token = tokens[t]
+            while right <= len(line) and line[left:right] in tokens:
                 right += 1
 
-            if token:
-                print(f"{token} {line[left : right-1]} null")
+            if left != right - 1:
+                t = line[left : right - 1]
+                print(f"{tokens[t]} {t} null")
             else:
                 failed = True
                 print(
@@ -54,7 +53,7 @@ def main():
                     file=sys.stderr,
                 )
 
-            left = right
+            left = right + 1
 
     print("EOF  null")
 
