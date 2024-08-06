@@ -61,9 +61,6 @@ def main():
                 left += 1
             else:
                 failed = True
-                # print(f"line: {line}")
-                # print(ord(line[left]))
-                # print([ord(c) for c in line])
                 print(
                     f"[line {i+1}] Error: Unexpected character: {line[left]}",
                     file=sys.stderr,
