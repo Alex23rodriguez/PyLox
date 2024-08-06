@@ -39,14 +39,14 @@ def main():
     for i, line in enumerate(lines):
         left = 0
         while left < len(line):
-            right = left + 1
-            while right <= len(line) and line[left:right] in tokens:
+            right = left
+            while right < len(line) and line[left : right + 1] in tokens:
                 right += 1
 
-            if left != right - 1:
-                t = line[left : right - 1]
+            if left != right:
+                t = line[left:right]
                 print(f"{tokens[t]} {t} null")
-                left = right - 1
+                left = right
             else:
                 failed = True
                 print(
