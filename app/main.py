@@ -70,7 +70,7 @@ def main():
                 case s if m := num_pattern.match(s):
                     n = m.span()[1]
                     num = line[:n]
-                    print(f"NUMBER {num} {num if '.' in num else num + '.0'}")
+                    print(f"NUMBER {num} {float(num)}")
                     line = line[n:]
 
                 # string
