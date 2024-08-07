@@ -83,7 +83,7 @@ def evaluate(filename):
                 print(token.literal)
             else:
                 print(token.lexeme)
-        else:
+        elif token.type.lower() in RESERVED_WORDS:
             print(token.lexeme)
 
 
