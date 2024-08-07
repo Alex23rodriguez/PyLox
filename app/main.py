@@ -48,6 +48,7 @@ def main():
 
     num_pattern = re.compile(r"[0-9]+(\.[0-9]+)?")
     str_pattern = re.compile('".*?"')
+    identifier_pattern = re.compile(r"[a-zA-Z_]+")
     whitespace_pattern = re.compile(r"\s+")
 
     failed = False
@@ -90,6 +91,11 @@ def main():
                 # whitespace
                 case s if m := whitespace_pattern.match(s):
                     line = line[m.span()[1] :]
+
+                case s if m := identifier_pattern.match(s):
+                    n = m.span()[1]
+                    print(f"IDENTIFIER {s[:n]} null")
+                    line = line[n:]
 
                 # bad token
                 case _:
