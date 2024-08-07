@@ -48,7 +48,7 @@ def main():
 
     num_pattern = re.compile(r"[0-9]+(\.[0-9]+)?")
     str_pattern = re.compile('".*?"')
-    identifier_pattern = re.compile(r"[a-zA-Z_]+")
+    identifier_pattern = re.compile(r"[a-zA-Z_]\w*")
     whitespace_pattern = re.compile(r"\s+")
 
     failed = False
