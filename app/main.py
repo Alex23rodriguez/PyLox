@@ -31,73 +31,71 @@ def main():
         "+": "PLUS",
         "-": "MINUS",
         "*": "STAR",
-        "=": "EQUAL",
         "==": "EQUAL_EQUAL",
-        "!": "BANG",
+        "=": "EQUAL",
         "!=": "BANG_EQUAL",
-        "<": "LESS",
-        ">": "GREATER",
+        "!": "BANG",
         "<=": "LESS_EQUAL",
         ">=": "GREATER_EQUAL",
+        "<": "LESS",
+        ">": "GREATER",
         "/": "SLASH",
-        "//": "_comment_",
     }
 
-    skip = [" ", "\t", "\n"]
-
     failed = False
+    token_pattern = re.compile(f"({'|'.join(tokens.keys())})")
     num_pattern = re.compile(r"[0-9]+(\.[0-9]+)?")
+    str_pattern = re.compile('".*?"')
+    whitespace_pattern = re.compile(r"\s+")
 
     for i, line in enumerate(lines, 1):
-        left = 0
-        while left < len(line):
-            if m := re.match(num_pattern, line[left:]):
-                n = m.span()[1]
-                num = line[left : left + n]
-                print(f"NUMBER {num} {num if '.' in num else num + '.0'}")
-                left += n
-                continue
+        while line:
+            match line:
+                # comment
+                case s if s.startswith("//"):
+                    break
 
-            if line[left] == '"':
-                end = line.find('"', left + 1)
-                if end == -1:
+                # token
+                case s if m := token_pattern.match(s):
+                    n = m.span()[1]
+                    token = line[:n]
+                    print(f"{tokens[token]} {token} null")
+                    line = line[n:]
+
+                # number
+                case s if m := num_pattern.match(s):
+                    n = m.span()[1]
+                    num = line[:n]
+                    print(f"NUMBER {num} {num if '.' in num else num + '.0'}")
+                    line = line[n:]
+
+                # string
+                case s if m := str_pattern.match(s):
+                    n = m.span()[1]
+                    print(f'STRING "{s[:n]}" {s[1:n-1]}')
+                    line = line[n:]
+
+                # unterminated string
+                case s if s.startswith('"'):
+                    failed = True
                     print(
                         f"[line {i}] Error: Unterminated string.",
                         file=sys.stderr,
                     )
+                    break
+
+                # whitespace
+                case s if m := whitespace_pattern.match(s):
+                    line = line[m.span()[1] :]
+
+                # bad token
+                case _:
                     failed = True
-                    break
-                else:
-                    string = line[left + 1 : end]
-                    print(f'STRING "{string}" {string}')
-                    left = end + 1
-                continue
-
-            elif line[left] in skip:
-                left += 1
-                continue
-
-            right = left
-            while right < len(line) and line[left : right + 1] in tokens:
-                right += 1
-
-            if left != right:
-                t = line[left:right]
-                token = tokens[t]
-                if token == "_comment_":
-                    break
-                print(f"{token} {t} null")
-                left = right
-
-            else:
-                failed = True
-                print(
-                    f"[line {i}] Error: Unexpected character: {line[left]}",
-                    file=sys.stderr,
-                )
-                left += 1
-                continue
-
+                    print(
+                        f"[line {i}] Error: Unexpected character: {line[0]}",
+                        file=sys.stderr,
+                    )
+                    line = line[1:]
     print("EOF  null")
 
     if failed:
