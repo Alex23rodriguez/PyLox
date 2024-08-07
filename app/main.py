@@ -67,7 +67,7 @@ def main():
 
     reserved_pattern = re.compile(rf"({'|'.join(reserved_words.keys())})\s")
     num_pattern = re.compile(r"[0-9]+(\.[0-9]+)?")
-    str_pattern = re.compile('".*?"')
+    str_pattern = re.compile('"(.*?)"')
     identifier_pattern = re.compile(r"[a-zA-Z_]\w*")
     whitespace_pattern = re.compile(r"\s+")
 
@@ -81,10 +81,11 @@ def main():
 
                 # token
                 case s if m := token_pattern.match(s):
-                    n = m.span()[1]
-                    token = line[:n]
+                    token = m.group()
                     print(f"{tokens[token]} {token} null")
-                    line = line[n:]
+                    line = line[m.end() :]
+
+                # reserved
                 case s if m := reserved_pattern.match(s):
                     word = m.group(1)
                     print(f"{reserved_words[word]} {word} null")
@@ -92,16 +93,14 @@ def main():
 
                 # number
                 case s if m := num_pattern.match(s):
-                    n = m.span()[1]
-                    num = line[:n]
+                    num = m.group()
                     print(f"NUMBER {num} {float(num)}")
-                    line = line[n:]
+                    line = line[m.end() :]
 
                 # string
                 case s if m := str_pattern.match(s):
-                    n = m.span()[1]
-                    print(f"STRING {s[:n]} {s[1:n-1]}")
-                    line = line[n:]
+                    print(f"STRING {m.group()} {m.group(1)}")
+                    line = line[m.end() :]
 
                 # unterminated string
                 case s if s.startswith('"'):
@@ -114,12 +113,11 @@ def main():
 
                 # whitespace
                 case s if m := whitespace_pattern.match(s):
-                    line = line[m.span()[1] :]
+                    line = line[m.end() :]
 
                 case s if m := identifier_pattern.match(s):
-                    n = m.span()[1]
-                    print(f"IDENTIFIER {s[:n]} null")
-                    line = line[n:]
+                    print(f"IDENTIFIER {m.group()} null")
+                    line = line[m.end() :]
 
                 # bad token
                 case _:
