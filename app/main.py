@@ -21,16 +21,16 @@ def main():
         lines = file.readlines()
 
     tokens = {
-        "(": "LEFT_PAREN",
-        ")": "RIGHT_PAREN",
-        "{": "LEFT_BRACE",
+        r"\)": "RIGHT_PAREN",
+        r"\(": "LEFT_PAREN",
         "}": "RIGHT_BRACE",
-        ".": "DOT",
+        "{": "LEFT_BRACE",
+        r"\.": "DOT",
         ",": "COMMA",
         ";": "SEMICOLON",
-        "+": "PLUS",
+        r"\+": "PLUS",
         "-": "MINUS",
-        "*": "STAR",
+        r"\*": "STAR",
         "==": "EQUAL_EQUAL",
         "=": "EQUAL",
         "!=": "BANG_EQUAL",
