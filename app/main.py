@@ -54,7 +54,7 @@ def main():
             if m := re.match(num_pattern, line[left:]):
                 n = m.span()[1]
                 num = line[left : left + n]
-                print(f"NUMBER {num} {num}")
+                print(f"NUMBER {num} {num if '.' in num else num + '.0'}")
                 left += n
                 continue
 
