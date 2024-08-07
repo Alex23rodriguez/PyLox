@@ -43,9 +43,29 @@ def main():
     }
     special = "().+*"
 
+    reserved_words = {
+        "and": "AND",
+        "class": "CLASS",
+        "else": "ELSE",
+        "false": "FALSE",
+        "for": "FOR",
+        "fun": "FUN",
+        "if": "IF",
+        "nil": "NIL",
+        "or": "OR",
+        "print": "PRINT",
+        "return": "RETURN",
+        "super": "SUPER",
+        "this": "THIS",
+        "true": "TRUE",
+        "var": "VAR",
+        "while": "WHILE",
+    }
+
     keys = ["\\" + k if k in special else k for k in tokens.keys()]
     token_pattern = re.compile(f"({'|'.join(keys)})")
 
+    reserved_pattern = re.compile(rf"({'|'.join(reserved_words.keys())})\s")
     num_pattern = re.compile(r"[0-9]+(\.[0-9]+)?")
     str_pattern = re.compile('".*?"')
     identifier_pattern = re.compile(r"[a-zA-Z_]\w*")
@@ -65,6 +85,10 @@ def main():
                     token = line[:n]
                     print(f"{tokens[token]} {token} null")
                     line = line[n:]
+                case s if m := reserved_pattern.match(s):
+                    word = m.group(1)
+                    print(f"{reserved_words[word]} {word} null")
+                    line = line[m.end() :]
 
                 # number
                 case s if m := num_pattern.match(s):
