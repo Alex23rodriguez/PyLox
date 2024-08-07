@@ -31,10 +31,19 @@ class Error:
 # COMMANDS
 def evaluate(filename):
     with open(filename) as file:
-        text = file.read().strip()
+        tokens, errors = scan(file.read())
 
-    if text in ["true", "false", "nil"]:
-        print(text)
+    for token in tokens:
+        if token.type == "STRING":
+            print(token.literal)
+
+        elif token.type == "NUMBER":
+            if "." in token.lexeme:
+                print(token.literal)
+            else:
+                print(token.lexeme)
+        else:
+            print(token.lexeme)
 
 
 def tokenize(filename):
