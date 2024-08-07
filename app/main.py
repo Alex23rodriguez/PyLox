@@ -13,10 +13,25 @@ def main():
     command = sys.argv[1]
     filename = sys.argv[2]
 
-    if command != "tokenize":
+    if command == "tokenize":
+        tokenize(filename)
+
+    elif command == "evaluate":
+        evaluate(filename)
+    else:
         print(f"Unknown command: {command}", file=sys.stderr)
         exit(1)
 
+
+def evaluate(filename):
+    with open(filename) as file:
+        text = file.read().strip()
+
+    if text in ["true", "false", "nil"]:
+        print(text)
+
+
+def tokenize(filename):
     with open(filename) as file:
         lines = file.readlines()
 
