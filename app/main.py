@@ -65,7 +65,9 @@ def main():
     keys = ["\\" + k if k in special else k for k in tokens.keys()]
     token_pattern = re.compile(f"({'|'.join(keys)})")
 
-    reserved_pattern = re.compile(f"({'|'.join(reserved_words.keys())})\s")
+    keys = "|".join(reserved_words.keys())
+    reserved_pattern = re.compile(rf"({keys})\s")
+    print(reserved_pattern)
     num_pattern = re.compile(r"[0-9]+(\.[0-9]+)?")
     str_pattern = re.compile('"(.*?)"')
     identifier_pattern = re.compile(r"[a-zA-Z_]\w*")
