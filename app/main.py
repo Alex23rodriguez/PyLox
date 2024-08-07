@@ -43,31 +43,28 @@ def main():
     }
     special = "().+*"
 
-    reserved_words = {
-        "and": "AND",
-        "class": "CLASS",
-        "else": "ELSE",
-        "false": "FALSE",
-        "for": "FOR",
-        "fun": "FUN",
-        "if": "IF",
-        "nil": "NIL",
-        "or": "OR",
-        "print": "PRINT",
-        "return": "RETURN",
-        "super": "SUPER",
-        "this": "THIS",
-        "true": "TRUE",
-        "var": "VAR",
-        "while": "WHILE",
-    }
+    reserved_words = [
+        "and",
+        "class",
+        "else",
+        "false",
+        "for",
+        "fun",
+        "if",
+        "nil",
+        "or",
+        "print",
+        "return",
+        "super",
+        "this",
+        "true",
+        "var",
+        "while",
+    ]
 
     keys = ["\\" + k if k in special else k for k in tokens.keys()]
     token_pattern = re.compile(f"({'|'.join(keys)})")
 
-    keys = "|".join(reserved_words.keys())
-    reserved_pattern = re.compile(rf"({keys})\s")
-    print(reserved_pattern)
     num_pattern = re.compile(r"[0-9]+(\.[0-9]+)?")
     str_pattern = re.compile('"(.*?)"')
     identifier_pattern = re.compile(r"[a-zA-Z_]\w*")
@@ -85,12 +82,6 @@ def main():
                 case s if m := token_pattern.match(s):
                     token = m.group()
                     print(f"{tokens[token]} {token} null")
-                    line = line[m.end() :]
-
-                # reserved
-                case s if m := reserved_pattern.match(s):
-                    word = m.group(1)
-                    print(f"{reserved_words[word]} {word} null")
                     line = line[m.end() :]
 
                 # number
@@ -117,8 +108,13 @@ def main():
                 case s if m := whitespace_pattern.match(s):
                     line = line[m.end() :]
 
+                # identifier or reserved
                 case s if m := identifier_pattern.match(s):
-                    print(f"IDENTIFIER {m.group()} null")
+                    w = m.group()
+                    if w in reserved_words:
+                        print(f"{w.upper()} {m.group()} null")
+                    else:
+                        print(f"IDENTIFIER {m.group()} null")
                     line = line[m.end() :]
 
                 # bad token
