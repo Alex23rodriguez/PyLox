@@ -1,28 +1,34 @@
 import re
 import sys
+from typing import Optional
 
 
-def main():
-    # You can use print statements as follows for debugging, they'll be visible when running tests.
-    print("Logs from your program will appear here!", file=sys.stderr)
+# CLASSES
+class Token:
+    def __init__(
+        self, typ: str, lexeme: str, literal: Optional[str], line: int
+    ) -> None:
+        self.type = typ
+        self.lexeme = lexeme
+        self.literal = literal
+        self.line = line
 
-    if len(sys.argv) < 3:
-        print("Usage: ./your_program.sh tokenize <filename>", file=sys.stderr)
-        exit(1)
-
-    command = sys.argv[1]
-    filename = sys.argv[2]
-
-    if command == "tokenize":
-        tokenize(filename)
-
-    elif command == "evaluate":
-        evaluate(filename)
-    else:
-        print(f"Unknown command: {command}", file=sys.stderr)
-        exit(1)
+    def __str__(self) -> str:
+        return (
+            f"{self.type} {self.lexeme} {'null' if self.literal is None else self.line}"
+        )
 
 
+class Error:
+    def __init__(self, line: int, message: str) -> None:
+        self.line = line
+        self.message = message
+
+    def report(self):
+        print(f"[line {self.line}] Error: {self.message}", file=sys.stderr)
+
+
+# COMMANDS
 def evaluate(filename):
     with open(filename) as file:
         text = file.read().strip()
@@ -33,9 +39,22 @@ def evaluate(filename):
 
 def tokenize(filename):
     with open(filename) as file:
-        lines = file.readlines()
+        tokens, errors = scan(file.read())
 
-    tokens = {
+    for token in tokens:
+        print(token)
+
+    for error in errors:
+        error.report()
+
+    if errors:
+        exit(65)
+
+
+def scan(text: str):
+    lines = text.splitlines()
+
+    basic_tokens = {
         ")": "RIGHT_PAREN",
         "(": "LEFT_PAREN",
         "}": "RIGHT_BRACE",
@@ -77,7 +96,7 @@ def tokenize(filename):
         "while",
     ]
 
-    keys = ["\\" + k if k in special else k for k in tokens.keys()]
+    keys = ["\\" + k if k in special else k for k in basic_tokens.keys()]
     token_pattern = re.compile(f"({'|'.join(keys)})")
 
     num_pattern = re.compile(r"[0-9]+(\.[0-9]+)?")
@@ -85,8 +104,9 @@ def tokenize(filename):
     identifier_pattern = re.compile(r"[a-zA-Z_]\w*")
     whitespace_pattern = re.compile(r"\s+")
 
-    failed = False
-    for i, line in enumerate(lines, 1):
+    tokens: list[Token] = []
+    errors: list[Error] = []
+    for line_num, line in enumerate(lines, 1):
         while line:
             match line:
                 # comment
@@ -96,27 +116,23 @@ def tokenize(filename):
                 # token
                 case s if m := token_pattern.match(s):
                     token = m.group()
-                    print(f"{tokens[token]} {token} null")
+                    tokens.append(Token(basic_tokens[token], token, None, line_num))
                     line = line[m.end() :]
 
                 # number
                 case s if m := num_pattern.match(s):
                     num = m.group()
-                    print(f"NUMBER {num} {float(num)}")
+                    tokens.append(Token("NUMBER", num, str(float(num)), line_num))
                     line = line[m.end() :]
 
                 # string
                 case s if m := str_pattern.match(s):
-                    print(f"STRING {m.group()} {m.group(1)}")
+                    tokens.append(Token("STRING", m.group(), m.group(1), line_num))
                     line = line[m.end() :]
 
                 # unterminated string
                 case s if s.startswith('"'):
-                    failed = True
-                    print(
-                        f"[line {i}] Error: Unterminated string.",
-                        file=sys.stderr,
-                    )
+                    errors.append(Error(line_num, "Unterminated string."))
                     break
 
                 # whitespace
@@ -127,23 +143,40 @@ def tokenize(filename):
                 case s if m := identifier_pattern.match(s):
                     w = m.group()
                     if w in reserved_words:
-                        print(f"{w.upper()} {m.group()} null")
+                        tokens.append(Token(w.upper(), m.group(), None, line_num))
                     else:
-                        print(f"IDENTIFIER {m.group()} null")
+                        tokens.append(Token("IDENTIFIER", m.group(), None, line_num))
                     line = line[m.end() :]
 
                 # bad token
                 case _:
-                    failed = True
-                    print(
-                        f"[line {i}] Error: Unexpected character: {line[0]}",
-                        file=sys.stderr,
-                    )
+                    errors.append(Error(line_num, "Unexpected character: " + line[0]))
                     line = line[1:]
-    print("EOF  null")
+    tokens.append(Token("EOF", "", None, 0))
 
-    if failed:
-        exit(65)
+    return tokens, errors
+
+
+# MAIN
+def main():
+    # You can use print statements as follows for debugging, they'll be visible when running tests.
+    print("Logs from your program will appear here!", file=sys.stderr)
+
+    if len(sys.argv) < 3:
+        print("Usage: ./your_program.sh tokenize <filename>", file=sys.stderr)
+        exit(1)
+
+    command = sys.argv[1]
+    filename = sys.argv[2]
+
+    if command == "tokenize":
+        tokenize(filename)
+
+    elif command == "evaluate":
+        evaluate(filename)
+    else:
+        print(f"Unknown command: {command}", file=sys.stderr)
+        exit(1)
 
 
 if __name__ == "__main__":
