@@ -75,7 +75,7 @@ def main():
                 # string
                 case s if m := str_pattern.match(s):
                     n = m.span()[1]
-                    print(f'STRING "{s[:n]}" {s[1:n-1]}')
+                    print(f"STRING {s[:n]} {s[1:n-1]}")
                     line = line[n:]
 
                 # unterminated string
