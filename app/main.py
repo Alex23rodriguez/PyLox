@@ -14,9 +14,7 @@ class Token:
         self.line = line
 
     def __str__(self) -> str:
-        return (
-            f"{self.type} {self.lexeme} {'null' if self.literal is None else self.line}"
-        )
+        return f"{self.type} {self.lexeme} {'null' if self.literal is None else self.literal}"
 
 
 class Error:
