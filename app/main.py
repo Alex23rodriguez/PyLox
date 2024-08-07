@@ -2,6 +2,49 @@ import re
 import sys
 from typing import Optional
 
+# CONSTS
+BASIC_TOKENS = {
+    ")": "RIGHT_PAREN",
+    "(": "LEFT_PAREN",
+    "}": "RIGHT_BRACE",
+    "{": "LEFT_BRACE",
+    ".": "DOT",
+    ",": "COMMA",
+    ";": "SEMICOLON",
+    "+": "PLUS",
+    "-": "MINUS",
+    "*": "STAR",
+    "==": "EQUAL_EQUAL",
+    "=": "EQUAL",
+    "!=": "BANG_EQUAL",
+    "!": "BANG",
+    "<=": "LESS_EQUAL",
+    ">=": "GREATER_EQUAL",
+    "<": "LESS",
+    ">": "GREATER",
+    "/": "SLASH",
+}
+SPECIAL_REGEX = "().+*"
+
+RESERVED_WORDS = [
+    "and",
+    "class",
+    "else",
+    "false",
+    "for",
+    "fun",
+    "if",
+    "nil",
+    "or",
+    "print",
+    "return",
+    "super",
+    "this",
+    "true",
+    "var",
+    "while",
+]
+
 
 # CLASSES
 class Token:
@@ -61,49 +104,7 @@ def tokenize(filename):
 def scan(text: str):
     lines = text.splitlines()
 
-    basic_tokens = {
-        ")": "RIGHT_PAREN",
-        "(": "LEFT_PAREN",
-        "}": "RIGHT_BRACE",
-        "{": "LEFT_BRACE",
-        ".": "DOT",
-        ",": "COMMA",
-        ";": "SEMICOLON",
-        "+": "PLUS",
-        "-": "MINUS",
-        "*": "STAR",
-        "==": "EQUAL_EQUAL",
-        "=": "EQUAL",
-        "!=": "BANG_EQUAL",
-        "!": "BANG",
-        "<=": "LESS_EQUAL",
-        ">=": "GREATER_EQUAL",
-        "<": "LESS",
-        ">": "GREATER",
-        "/": "SLASH",
-    }
-    special = "().+*"
-
-    reserved_words = [
-        "and",
-        "class",
-        "else",
-        "false",
-        "for",
-        "fun",
-        "if",
-        "nil",
-        "or",
-        "print",
-        "return",
-        "super",
-        "this",
-        "true",
-        "var",
-        "while",
-    ]
-
-    keys = ["\\" + k if k in special else k for k in basic_tokens.keys()]
+    keys = ["\\" + k if k in SPECIAL_REGEX else k for k in BASIC_TOKENS.keys()]
     token_pattern = re.compile(f"({'|'.join(keys)})")
 
     num_pattern = re.compile(r"[0-9]+(\.[0-9]+)?")
@@ -123,7 +124,7 @@ def scan(text: str):
                 # token
                 case s if m := token_pattern.match(s):
                     token = m.group()
-                    tokens.append(Token(basic_tokens[token], token, None, line_num))
+                    tokens.append(Token(BASIC_TOKENS[token], token, None, line_num))
                     line = line[m.end() :]
 
                 # number
@@ -149,7 +150,7 @@ def scan(text: str):
                 # identifier or reserved
                 case s if m := identifier_pattern.match(s):
                     w = m.group()
-                    if w in reserved_words:
+                    if w in RESERVED_WORDS:
                         tokens.append(Token(w.upper(), m.group(), None, line_num))
                     else:
                         tokens.append(Token("IDENTIFIER", m.group(), None, line_num))
