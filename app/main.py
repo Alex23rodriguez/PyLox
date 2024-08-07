@@ -21,16 +21,16 @@ def main():
         lines = file.readlines()
 
     tokens = {
-        r"\)": "RIGHT_PAREN",
-        r"\(": "LEFT_PAREN",
+        ")": "RIGHT_PAREN",
+        "(": "LEFT_PAREN",
         "}": "RIGHT_BRACE",
         "{": "LEFT_BRACE",
-        r"\.": "DOT",
+        ".": "DOT",
         ",": "COMMA",
         ";": "SEMICOLON",
-        r"\+": "PLUS",
+        "+": "PLUS",
         "-": "MINUS",
-        r"\*": "STAR",
+        "*": "STAR",
         "==": "EQUAL_EQUAL",
         "=": "EQUAL",
         "!=": "BANG_EQUAL",
@@ -41,13 +41,16 @@ def main():
         ">": "GREATER",
         "/": "SLASH",
     }
+    special = "().+*"
 
-    failed = False
-    token_pattern = re.compile(f"({'|'.join(tokens.keys())})")
+    keys = ["\\" + k if k in special else k for k in tokens.keys()]
+    token_pattern = re.compile(f"({'|'.join(keys)})")
+
     num_pattern = re.compile(r"[0-9]+(\.[0-9]+)?")
     str_pattern = re.compile('".*?"')
     whitespace_pattern = re.compile(r"\s+")
 
+    failed = False
     for i, line in enumerate(lines, 1):
         while line:
             match line:
