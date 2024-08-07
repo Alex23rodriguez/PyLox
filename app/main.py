@@ -69,24 +69,6 @@ class Error:
         print(f"[line {self.line}] Error: {self.message}", file=sys.stderr)
 
 
-# COMMANDS
-def evaluate(filename):
-    with open(filename) as file:
-        tokens, errors = scan(file.read())
-
-    for token in tokens:
-        if token.type == "STRING":
-            print(token.literal)
-
-        elif token.type == "NUMBER":
-            if "." in token.lexeme:
-                print(token.literal)
-            else:
-                print(token.lexeme)
-        elif token.type.lower() in RESERVED_WORDS:
-            print(token.lexeme)
-
-
 def tokenize(filename):
     with open(filename) as file:
         tokens, errors = scan(file.read())
@@ -180,8 +162,6 @@ def main():
     if command == "tokenize":
         tokenize(filename)
 
-    elif command == "evaluate":
-        evaluate(filename)
     else:
         print(f"Unknown command: {command}", file=sys.stderr)
         exit(1)
