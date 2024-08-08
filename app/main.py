@@ -1,8 +1,7 @@
 import sys
 
-sys.path.append(".")
-
 from app.scanner import scan
+from app.visitors import AstPrinter, TokenParser
 
 
 def tokenize(filename):
@@ -32,6 +31,16 @@ def main():
 
     if command == "tokenize":
         tokenize(filename)
+
+    if command == "parse":
+        with open(filename) as file:
+            tokens, errors = scan(file.read())
+
+        if errors:
+            exit(65)
+
+        expr = TokenParser().parseTokens(tokens[:-1])
+        print(AstPrinter().print(expr))
 
     else:
         print(f"Unknown command: {command}", file=sys.stderr)
