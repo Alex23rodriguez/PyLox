@@ -36,4 +36,4 @@ class AstPrinter(Visitor[str]):
         return "nil" if expr.value is None else str(expr.value)
 
     def visitUnaryExpr(self, expr):
-        return f"({expr.operator.lexeme} {expr.accept(self)})"
+        return f"({expr.operator.lexeme} {expr.right.accept(self)})"
