@@ -107,6 +107,17 @@ class TokenParser(Visitor[Expr]):
             case "NIL":
                 return Literal(None), tokens
             case "LEFT_PAREN":
-                pass
+                return self._get_paren(tokens)
             case _:
                 return Literal(None), tokens
+
+    def _get_paren(self, tokens: list[Token]):
+        level = 0
+        for i, t in enumerate(tokens[1:], 1):
+            if t.type == "LEFT_PAREN":
+                level += 1
+            elif t.type == "RIGHT_PAREN":
+                if level == 0:
+                    return Grouping(self.parseTokens(tokens[1:i])), tokens[i + 1 :]
+                level -= 1
+        assert False, "Unmatched parentheses"
