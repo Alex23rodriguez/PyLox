@@ -17,12 +17,13 @@ class TokenParser(Visitor[Expr]):
         return Unary(expr.operator, expr.right.accept(self))
 
     def parseTokens(self, tokens: list[Token]) -> Expr:
-        pass
+        return self.expression(tokens)
 
     def expression(self, tokens: list[Token]) -> Expr:
         """given a list of tokens, return the expression they represent"""
         # top of grammar, lowest precedence
-        expr, _ = self.equality(tokens)
+        expr, tokens = self.equality(tokens)
+        assert len(tokens) == 0, "did not consume all tokens"
         return expr
 
     def equality(self, tokens: list[Token]) -> tuple[Expr, list[Token]]:
