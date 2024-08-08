@@ -33,7 +33,13 @@ class AstPrinter(Visitor[str]):
         return f"(group {expr.expression.accept(self)})"
 
     def visitLiteralExpr(self, expr):
-        return "nil" if expr.value is None else str(expr.value)
+        match expr.value:
+            case None:
+                return "nil"
+            case True | False:
+                return str(expr.value).lower()
+            case _:
+                return str(expr.value)
 
     def visitUnaryExpr(self, expr):
         return f"({expr.operator.lexeme} {expr.right.accept(self)})"
