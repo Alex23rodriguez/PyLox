@@ -30,7 +30,7 @@ class AstPrinter(Visitor[str]):
         return f"({expr.operator.lexeme} {expr.left.accept(self)} {expr.right.accept(self)})"
 
     def visitGroupingExpr(self, expr):
-        return f"({expr.expression.accept(self)})"
+        return f"(group {expr.expression.accept(self)})"
 
     def visitLiteralExpr(self, expr):
         return "nil" if expr.value is None else str(expr.value)
