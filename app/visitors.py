@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 
 from app.expressions import Binary, Expr, Grouping, Literal, Unary
-from app.scanner import Token
 
 
 class Visitor[T](ABC):
@@ -38,39 +37,3 @@ class AstPrinter(Visitor[str]):
 
     def visitUnaryExpr(self, expr):
         return f"({expr.operator.lexeme} {expr.accept(self)})"
-
-
-class TokenParser(Visitor[Expr]):
-    def visitBinaryExpr(self, expr):
-        return Binary(expr.left.accept(self), expr.operator, expr.right.accept(self))
-
-    def visitGroupingExpr(self, expr):
-        return Grouping(expr.accept(self))
-
-    def visitLiteralExpr(self, expr):
-        return Literal(expr.value)
-
-    def visitUnaryExpr(self, expr):
-        return Unary(expr.operator, expr.right.accept(self))
-
-    def parseTokens(self, tokens: list[Token]) -> Expr:
-
-        # print(tokens)
-        if len(tokens) == 1:
-            return self._parse_literal(tokens[0])
-
-        assert False, "can't parse this"
-
-    def _parse_literal(self, token: Token):
-        if token.type in [
-            "NUMBER",
-            "STRING",
-        ]:
-            return Literal(token.literal)
-        elif token.type in [
-            "TRUE",
-            "FALSE",
-            "NIL",
-        ]:
-            return Literal(token.lexeme)
-        assert False, f"{token.type} can't be interpreted as a literal"
