@@ -17,6 +17,9 @@ class Token:
     def __str__(self) -> str:
         return f"{self.type} {self.lexeme} {'null' if self.literal is None else self.literal}"
 
+    def __repr__(self) -> str:
+        return f"Token({self.type}, {self.lexeme}, {'null' if self.literal is None else self.literal})"
+
 
 class Error:
     def __init__(self, line: int, message: str) -> None:
