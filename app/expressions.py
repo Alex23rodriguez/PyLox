@@ -1,24 +1,25 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from typing import Any
 
 from app.scanner import Token
 
 
 class Visitor(ABC):
     @abstractmethod
-    def visitBinaryExpr(self, expr):
+    def visitBinaryExpr(self, expr) -> Any:
         pass
 
     @abstractmethod
-    def visitGroupingExpr(self, expr):
+    def visitGroupingExpr(self, expr) -> Any:
         pass
 
     @abstractmethod
-    def visitLiteralExpr(self, expr):
+    def visitLiteralExpr(self, expr) -> Any:
         pass
 
     @abstractmethod
-    def visitUnaryExpr(self, expr):
+    def visitUnaryExpr(self, expr) -> Any:
         pass
 
 
@@ -35,7 +36,7 @@ class Binary(Expr):
     right: Expr
 
     def accept(self, visitor):
-        visitor.visitBinaryExpr(self)
+        return visitor.visitBinaryExpr(self)
 
 
 @dataclass
@@ -43,7 +44,7 @@ class Grouping(Expr):
     expression: Expr
 
     def accept(self, visitor):
-        visitor.visitGroupingExpr(self)
+        return visitor.visitGroupingExpr(self)
 
 
 @dataclass
@@ -51,7 +52,7 @@ class Literal(Expr):
     value: float | str | bool | None
 
     def accept(self, visitor):
-        visitor.visitLiteralExpr(self)
+        return visitor.visitLiteralExpr(self)
 
 
 @dataclass
@@ -60,4 +61,4 @@ class Unary(Expr):
     right: Expr
 
     def accept(self, visitor):
-        visitor.visitUnaryExpr(self)
+        return visitor.visitUnaryExpr(self)
