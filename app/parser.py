@@ -88,8 +88,6 @@ class TokenParser(Visitor[Expr]):
 
         return self.primary(tokens)
 
-        return expr, tokens
-
     def primary(self, tokens: list[Token]) -> tuple[Expr, list[Token]]:
         """handle literals and parentheses"""
         # bottom of grammar, highest precedence
