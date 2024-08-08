@@ -17,6 +17,7 @@ class TokenParser(Visitor[Expr]):
         return Unary(expr.operator, expr.right.accept(self))
 
     def parseTokens(self, tokens: list[Token]) -> Expr:
+        assert tokens, "cannot parse empty token list"
         return self.expression(tokens)
 
     def expression(self, tokens: list[Token]) -> Expr:
@@ -110,15 +111,18 @@ class TokenParser(Visitor[Expr]):
             case "LEFT_PAREN":
                 return self._get_paren(tokens)
             case _:
-                return Literal(None), tokens
+                assert False, "got non literal"
 
     def _get_paren(self, tokens: list[Token]):
         level = 0
-        for i, t in enumerate(tokens[1:], 1):
+        for i, t in enumerate(tokens):
             if t.type == "LEFT_PAREN":
                 level += 1
             elif t.type == "RIGHT_PAREN":
                 if level == 0:
-                    return Grouping(self.parseTokens(tokens[1:i])), tokens[i + 1 :]
+                    return (
+                        Grouping(self.parseTokens(tokens[:i])),
+                        tokens[i + 1 :],
+                    )
                 level -= 1
         assert False, "Unmatched parentheses"
