@@ -2,7 +2,7 @@ import re
 import sys
 from typing import Optional
 
-from consts import BASIC_TOKENS, RESERVED_WORDS, SPECIAL_REGEX
+from app.consts import BASIC_TOKENS, RESERVED_WORDS, SPECIAL_REGEX
 
 
 class Token:

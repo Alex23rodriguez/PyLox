@@ -1,6 +1,8 @@
 import sys
 
-from scanner import scan
+sys.path.append(".")
+
+from app.scanner import scan
 
 
 def tokenize(filename):
