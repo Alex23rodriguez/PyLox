@@ -27,7 +27,7 @@ class AstPrinter(Visitor[str]):
 
     # overrides
     def visitBinaryExpr(self, expr):
-        return f"({expr.operator} {expr.left.accept(self)} {expr.right.accept(self)})"
+        return f"({expr.operator.lexeme} {expr.left.accept(self)} {expr.right.accept(self)})"
 
     def visitGroupingExpr(self, expr):
         return f"({expr.expression.accept(self)})"
