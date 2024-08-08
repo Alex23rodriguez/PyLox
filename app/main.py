@@ -1,7 +1,8 @@
 import sys
 
+from app.parser import TokenParser
 from app.scanner import scan
-from app.visitors import AstPrinter, TokenParser
+from app.visitors import AstPrinter
 
 
 def tokenize(filename):
