@@ -54,19 +54,23 @@ class TokenParser(Visitor[Expr]):
         return Unary(expr.operator, expr.right.accept(self))
 
     def parseTokens(self, tokens: list[Token]) -> Expr:
+
         # print(tokens)
         if len(tokens) == 1:
-            if tokens[0].type in [
-                "NUMBER",
-                "STRING",
-            ]:
-                return Literal(tokens[0].literal)
-            elif tokens[0].type in [
-                "TRUE",
-                "FALSE",
-                "NIL",
-            ]:
-                return Literal(tokens[0].lexeme)
-            assert False, f"{tokens[0].type} can't be interpreted as a literal"
+            return self._parse_literal(tokens[0])
 
         assert False, "can't parse this"
+
+    def _parse_literal(self, token: Token):
+        if token.type in [
+            "NUMBER",
+            "STRING",
+        ]:
+            return Literal(token.literal)
+        elif token.type in [
+            "TRUE",
+            "FALSE",
+            "NIL",
+        ]:
+            return Literal(token.lexeme)
+        assert False, f"{token.type} can't be interpreted as a literal"
