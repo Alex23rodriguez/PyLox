@@ -22,29 +22,91 @@ class TokenParser(Visitor[Expr]):
     def expression(self, tokens: list[Token]) -> Expr:
         """given a list of tokens, return the expression they represent"""
         # top of grammar, lowest precedence
-        pass
+        expr, _ = self.equality(tokens)
+        return expr
 
-    def equality(self, tokens: list[Token]) -> Expr:
+    def equality(self, tokens: list[Token]) -> tuple[Expr, list[Token]]:
         """handle equality comparison"""
-        pass
+        expr, tokens = self.comparison(tokens)
 
-    def comparison(self, tokens: list[Token]) -> Expr:
+        while tokens and tokens[0].type in [
+            "BANG_EQUAL",
+            "EQUAL_EQUAL",
+        ]:
+            op, *tokens = tokens
+            right, tokens = self.comparison(tokens)
+            expr = Binary(expr, op, right)
+
+        return expr, tokens
+
+    def comparison(self, tokens: list[Token]) -> tuple[Expr, list[Token]]:
         """handle <, >, <=, >= comparison"""
-        pass
+        expr, tokens = self.term(tokens)
 
-    def term(self, tokens: list[Token]) -> Expr:
+        while tokens and tokens[0].type in [
+            "LESS",
+            "LESS_EQUAL",
+            "GREATER",
+            "GREATER_EQUAL",
+        ]:
+            op, *tokens = tokens
+            right, tokens = self.term(tokens)
+            expr = Binary(expr, op, right)
+
+        return expr, tokens
+
+    def term(self, tokens: list[Token]) -> tuple[Expr, list[Token]]:
         """handle +, -"""
-        pass
+        expr, tokens = self.factor(tokens)
 
-    def factor(self, tokens: list[Token]) -> Expr:
+        while tokens and tokens[0].type in ["PLUS", "MINUS"]:
+            op, *tokens = tokens
+            right, tokens = self.factor(tokens)
+            expr = Binary(expr, op, right)
+
+        return expr, tokens
+
+    def factor(self, tokens: list[Token]) -> tuple[Expr, list[Token]]:
         """handle *, /"""
-        pass
+        expr, tokens = self.unary(tokens)
 
-    def unary(self, tokens: list[Token]) -> Expr:
+        while tokens and tokens[0].type in ["STAR", "SLASH"]:
+            op, *tokens = tokens
+            right, tokens = self.unary(tokens)
+            expr = Binary(expr, op, right)
+
+        return expr, tokens
+
+    def unary(self, tokens: list[Token]) -> tuple[Expr, list[Token]]:
         """handle -, !"""
-        pass
+        if tokens and tokens[0].type in ["MINUS", "BANG"]:
+            op, *tokens = tokens
+            expr, tokens = self.unary(tokens)
+            return Unary(op, expr), tokens
 
-    def primary(self, tokens: list[Token]) -> Expr:
+        return self.primary(tokens)
+
+        return expr, tokens
+
+    def primary(self, tokens: list[Token]) -> tuple[Expr, list[Token]]:
         """handle literals and parentheses"""
         # bottom of grammar, highest precedence
-        pass
+        assert tokens, "got empty list"
+
+        t, *tokens = tokens
+
+        match t.type:
+            case "NUMBER":
+                return Literal(float(t.literal)), tokens
+            case "STRING":
+                return Literal(t.literal), tokens
+            case "TRUE":
+                return Literal(True), tokens
+            case "FALSE":
+                return Literal(False), tokens
+            case "NIL":
+                return Literal(None), tokens
+            case "LEFT_PAREN":
+                pass
+            case _:
+                return Literal(None), tokens
