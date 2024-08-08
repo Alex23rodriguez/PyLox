@@ -5,27 +5,9 @@ from typing import Any
 from app.scanner import Token
 
 
-class Visitor(ABC):
-    @abstractmethod
-    def visitBinaryExpr(self, expr) -> Any:
-        pass
-
-    @abstractmethod
-    def visitGroupingExpr(self, expr) -> Any:
-        pass
-
-    @abstractmethod
-    def visitLiteralExpr(self, expr) -> Any:
-        pass
-
-    @abstractmethod
-    def visitUnaryExpr(self, expr) -> Any:
-        pass
-
-
 class Expr(ABC):
     @abstractmethod
-    def accept(self, visitor: Visitor):
+    def accept(self, visitor) -> Any:
         pass
 
 
@@ -62,3 +44,21 @@ class Unary(Expr):
 
     def accept(self, visitor):
         return visitor.visitUnaryExpr(self)
+
+
+class Visitor[T](ABC):
+    @abstractmethod
+    def visitBinaryExpr(self, expr: Binary) -> T:
+        pass
+
+    @abstractmethod
+    def visitGroupingExpr(self, expr: Grouping) -> T:
+        pass
+
+    @abstractmethod
+    def visitLiteralExpr(self, expr: Literal) -> T:
+        pass
+
+    @abstractmethod
+    def visitUnaryExpr(self, expr: Unary) -> T:
+        pass
