@@ -123,4 +123,4 @@ class TokenParser(Visitor[Expr]):
                         tokens[i + 1 :],
                     )
                 level -= 1
-        assert False, "Unmatched parentheses"
+        assert False, "Unmatched parentheses."

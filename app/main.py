@@ -40,7 +40,12 @@ def main():
         if errors:
             exit(65)
 
-        expr = TokenParser().parseTokens(tokens[:-1])
+        try:
+            expr = TokenParser().parseTokens(tokens[:-1])
+        except AssertionError as err:
+            print(f"Error: {err}", file=sys.stderr)
+            exit(65)
+
         print(AstPrinter().print(expr))
 
     else:
