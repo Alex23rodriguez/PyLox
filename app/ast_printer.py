@@ -1,4 +1,24 @@
-from app.expressions import Expr, Visitor
+from abc import ABC, abstractmethod
+
+from app.expressions import Binary, Expr, Grouping, Literal, Unary
+
+
+class Visitor[T](ABC):
+    @abstractmethod
+    def visitBinaryExpr(self, expr: Binary) -> T:
+        pass
+
+    @abstractmethod
+    def visitGroupingExpr(self, expr: Grouping) -> T:
+        pass
+
+    @abstractmethod
+    def visitLiteralExpr(self, expr: Literal) -> T:
+        pass
+
+    @abstractmethod
+    def visitUnaryExpr(self, expr: Unary) -> T:
+        pass
 
 
 class AstPrinter(Visitor[str]):

@@ -44,21 +44,3 @@ class Unary(Expr):
 
     def accept(self, visitor):
         return visitor.visitUnaryExpr(self)
-
-
-class Visitor[T](ABC):
-    @abstractmethod
-    def visitBinaryExpr(self, expr: Binary) -> T:
-        pass
-
-    @abstractmethod
-    def visitGroupingExpr(self, expr: Grouping) -> T:
-        pass
-
-    @abstractmethod
-    def visitLiteralExpr(self, expr: Literal) -> T:
-        pass
-
-    @abstractmethod
-    def visitUnaryExpr(self, expr: Unary) -> T:
-        pass
