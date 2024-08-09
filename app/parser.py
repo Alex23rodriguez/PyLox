@@ -19,7 +19,7 @@ class Parser:
         except ParserError as e:
             return None, [e]
 
-        if len(tokens) != 0:
+        if tokens[0].type != "EOF":
             return None, [ParserError(0, " at end", "did not consume all tokens")]
         return expr, []
 

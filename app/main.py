@@ -27,7 +27,7 @@ def tokenize(filename, log=True):
 
 def parse(filename, log=True):
     tokens = tokenize(filename, log=False)
-    expr, errors = Parser().parseTokens(tokens[:-1])
+    expr, errors = Parser().parseTokens(tokens)
 
     for error in errors:
         error.report()
