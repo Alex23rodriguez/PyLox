@@ -1,21 +1,8 @@
 from app.expressions import Binary, Expr, Grouping, Literal, Unary
 from app.scanner import Token
-from app.visitors import Visitor
 
 
-class TokenParser(Visitor[Expr]):
-    def visitBinaryExpr(self, expr):
-        return Binary(expr.left.accept(self), expr.operator, expr.right.accept(self))
-
-    def visitGroupingExpr(self, expr):
-        return Grouping(expr.accept(self))
-
-    def visitLiteralExpr(self, expr):
-        return Literal(expr.value)
-
-    def visitUnaryExpr(self, expr):
-        return Unary(expr.operator, expr.right.accept(self))
-
+class TokenParser:
     def parseTokens(self, tokens: list[Token]) -> Expr:
         assert tokens, "cannot parse empty token list"
         return self.expression(tokens)
