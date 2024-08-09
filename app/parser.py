@@ -93,6 +93,9 @@ class Parser:
     def primary(self, tokens: list[Token]) -> tuple[Expr, list[Token]]:
         """handle literals and parentheses"""
         # bottom of grammar, highest precedence
+        if not tokens:
+            raise ParserError(0, "", "Expected token.")
+
         t, *tokens = tokens
 
         match t.type:
