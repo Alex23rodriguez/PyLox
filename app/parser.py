@@ -19,7 +19,7 @@ class Parser:
         except ParserError as e:
             return None, [e]
 
-        if len(tokens) == 0:
+        if len(tokens) != 0:
             return None, [ParserError(0, " at end", "did not consume all tokens")]
         return expr, []
 
@@ -110,7 +110,7 @@ class Parser:
             case "LEFT_PAREN":
                 return self._get_paren(tokens)
             case _:
-                assert False, "got non literal"
+                raise ParserError(t.line, "", "got non literal")
 
     def _get_paren(self, tokens: list[Token]):
         level = 0
