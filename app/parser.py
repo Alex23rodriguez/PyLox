@@ -1,5 +1,5 @@
+from app.classes import Token
 from app.expressions import Binary, Expr, Grouping, Literal, Unary
-from app.scanner import Token
 
 
 class TokenParser:

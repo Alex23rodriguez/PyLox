@@ -1,33 +1,7 @@
 import re
-import sys
-from typing import Optional
 
+from app.classes import Error, Token
 from app.consts import BASIC_TOKENS, RESERVED_WORDS, SPECIAL_REGEX
-
-
-class Token:
-    def __init__(
-        self, typ: str, lexeme: str, literal: Optional[str], line: int
-    ) -> None:
-        self.type = typ
-        self.lexeme = lexeme
-        self.literal = literal
-        self.line = line
-
-    def __str__(self) -> str:
-        return f"{self.type} {self.lexeme} {'null' if self.literal is None else self.literal}"
-
-    def __repr__(self) -> str:
-        return f"Token({self.type}, {self.lexeme}, {'null' if self.literal is None else self.literal})"
-
-
-class Error:
-    def __init__(self, line: int, message: str) -> None:
-        self.line = line
-        self.message = message
-
-    def report(self):
-        print(f"[line {self.line}] Error: {self.message}", file=sys.stderr)
 
 
 def scan(text: str):
@@ -80,7 +54,9 @@ def scan(text: str):
                 case s if m := identifier_pattern.match(s):
                     w = m.group()
                     if w in RESERVED_WORDS:
-                        tokens.append(Token(w.upper(), m.group(), None, line_num))
+                        tokens.append(
+                            Token(RESERVED_WORDS[w], m.group(), None, line_num)
+                        )
                     else:
                         tokens.append(Token("IDENTIFIER", m.group(), None, line_num))
                     line = line[m.end() :]

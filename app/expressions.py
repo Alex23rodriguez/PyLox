@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import Any
 
-from app.scanner import Token
+from app.classes import Token
 
 
 class Expr(ABC):
