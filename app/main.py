@@ -29,10 +29,12 @@ def parse(filename):
     if errors:
         exit(65)
 
-    try:
-        expr = Parser().parseTokens(tokens[:-1])
-    except AssertionError as err:
-        print(f"Error: {err}", file=sys.stderr)
+    expr, errors = Parser().parseTokens(tokens[:-1])
+
+    for error in errors:
+        error.report()
+
+    if errors or expr is None:
         exit(65)
 
     print(AstPrinter().print(expr))
@@ -45,13 +47,16 @@ def evaluate(filename):
     if errors:
         exit(65)
 
-    try:
-        expr = Parser().parseTokens(tokens[:-1])
-    except AssertionError as err:
-        print(f"Error: {err}", file=sys.stderr)
+    expr, errors = Parser().parseTokens(tokens[:-1])
+    if errors or expr is None:
         exit(65)
 
-    ans = Evaluator().evaluate(expr)
+    ans, errors = Evaluator().evaluate(expr)
+    for error in errors:
+        error.report()
+
+    if errors or expr is None:
+        exit(65)
     print(ans)
 
 

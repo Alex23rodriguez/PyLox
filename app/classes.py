@@ -20,9 +20,10 @@ class Token:
 
 
 @dataclass
-class Error:
+class Error(Exception):
     line: int
+    where: str
     message: str
 
     def report(self):
-        print(f"[line {self.line}] Error: {self.message}", file=sys.stderr)
+        print(f"[line {self.line}] Error{self.where}: {self.message}", file=sys.stderr)

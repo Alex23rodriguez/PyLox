@@ -43,7 +43,7 @@ def scan(text: str):
 
                 # unterminated string
                 case s if s.startswith('"'):
-                    errors.append(Error(line_num, "Unterminated string."))
+                    errors.append(Error(line_num, "", "Unterminated string."))
                     break
 
                 # whitespace
@@ -63,7 +63,9 @@ def scan(text: str):
 
                 # bad token
                 case _:
-                    errors.append(Error(line_num, "Unexpected character: " + line[0]))
+                    errors.append(
+                        Error(line_num, "", "Unexpected character: " + line[0])
+                    )
                     line = line[1:]
     tokens.append(Token("EOF", "", None, 0))
 

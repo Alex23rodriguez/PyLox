@@ -1,13 +1,27 @@
-from app.classes import Token
+from typing import Optional
+
+from app.classes import Error, Token
 from app.expressions import Binary, Expr, Grouping, Literal, Unary
 
 
+class ParserError(Error):
+    pass
+
+
 class Parser:
-    def parseTokens(self, tokens: list[Token]) -> Expr:
-        assert tokens, "cannot parse empty token list"
-        expr, tokens = self.expression(tokens)
-        assert len(tokens) == 0, "did not consume all tokens"
-        return expr
+    def parseTokens(
+        self, tokens: list[Token]
+    ) -> tuple[Optional[Expr], list[ParserError]]:
+        if not tokens:
+            return None, [ParserError(1, "", "Cannot parse empty token list")]
+        try:
+            expr, tokens = self.expression(tokens)
+        except ParserError as e:
+            return None, [e]
+
+        if len(tokens) == 0:
+            return None, [ParserError(0, " at end", "did not consume all tokens")]
+        return expr, []
 
     def expression(self, tokens: list[Token]) -> tuple[Expr, list[Token]]:
         """given a list of tokens, return the expression they represent"""
@@ -79,12 +93,11 @@ class Parser:
     def primary(self, tokens: list[Token]) -> tuple[Expr, list[Token]]:
         """handle literals and parentheses"""
         # bottom of grammar, highest precedence
-        assert tokens, "got empty list"
-
         t, *tokens = tokens
 
         match t.type:
             case "NUMBER":
+                assert t.literal is not None
                 return Literal(float(t.literal)), tokens
             case "STRING":
                 return Literal(t.literal), tokens
@@ -106,9 +119,10 @@ class Parser:
                 level += 1
             elif t.type == "RIGHT_PAREN":
                 if level == 0:
+                    expr, _ = self.expression(tokens[:i])
                     return (
-                        Grouping(self.parseTokens(tokens[:i])),
+                        Grouping(expr),
                         tokens[i + 1 :],
                     )
                 level -= 1
-        assert False, "Unmatched parentheses."
+        raise ParserError(-1, " at end", "Unmatched parentheses.")

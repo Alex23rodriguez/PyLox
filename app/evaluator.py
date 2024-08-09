@@ -1,5 +1,6 @@
 from operator import add, eq, ge, gt, le, lt, mul, ne, sub, truediv
 
+from app.classes import Error
 from app.expressions import Expr
 from app.visitors import Visitor
 
@@ -17,18 +18,26 @@ operators = {
 }
 
 
+class EvalError(Error):
+    pass
+
+
 class Evaluator(Visitor):
-    def evaluate(self, expr: Expr):
-        value = expr.accept(self)
-        match value:
-            case None:
-                return "nil"
-            case True | False:
-                return str(value).lower()
-            case _:
-                if isinstance(value, float) and int(value) == value:
-                    return str(int(value))
-                return str(value)
+    def evaluate(self, expr: Expr) -> tuple[str, list[EvalError]]:
+
+        try:
+            value = expr.accept(self)
+            match value:
+                case None:
+                    return "nil", []
+                case True | False:
+                    return str(value).lower(), []
+                case _:
+                    if isinstance(value, float) and int(value) == value:
+                        return str(int(value)), []
+                    return str(value), []
+        except Exception as e:
+            return "", [EvalError(0, "", str(e))]
 
     # overrides
     def visitBinaryExpr(self, expr):
