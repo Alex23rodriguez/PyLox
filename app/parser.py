@@ -13,14 +13,14 @@ class Parser:
         self, tokens: list[Token]
     ) -> tuple[Optional[Expr], list[ParserError]]:
         if not tokens:
-            return None, [ParserError(1, "", "Cannot parse empty token list")]
+            return None, [ParserError(1, "", "Cannot parse empty token list.")]
         try:
             expr, tokens = self.expression(tokens)
         except ParserError as e:
             return None, [e]
 
         if tokens[0].type != "EOF":
-            return None, [ParserError(0, " at end", "did not consume all tokens")]
+            return None, [ParserError(-1, " at end", "Did not consume all tokens.")]
         return expr, []
 
     def expression(self, tokens: list[Token]) -> tuple[Expr, list[Token]]:
@@ -113,7 +113,7 @@ class Parser:
             case "LEFT_PAREN":
                 return self._get_paren(tokens)
             case _:
-                raise ParserError(t.line, "", "got non literal")
+                raise ParserError(t.line, "", "Got non literal.")
 
     def _get_paren(self, tokens: list[Token]):
         level = 0
