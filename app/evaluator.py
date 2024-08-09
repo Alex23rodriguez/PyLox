@@ -19,7 +19,14 @@ operators = {
 
 class Evaluator(Visitor):
     def evaluate(self, expr: Expr):
-        return expr.accept(self)
+        value = expr.accept(self)
+        match value:
+            case None:
+                return "nil"
+            case True | False:
+                return str(value).lower()
+            case _:
+                return str(value)
 
     # overrides
     def visitBinaryExpr(self, expr):
