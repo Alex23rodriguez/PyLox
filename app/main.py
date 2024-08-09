@@ -8,12 +8,13 @@ from app.scanner import scan
 from app.visitors import AstPrinter
 
 
-def tokenize(filename):
+def tokenize(filename, log=True):
     with open(filename) as file:
         tokens, errors = scan(file.read())
 
-    for token in tokens:
-        print(token)
+    if log:
+        for token in tokens:
+            print(token)
 
     for error in errors:
         error.report()
@@ -21,14 +22,11 @@ def tokenize(filename):
     if errors:
         exit(65)
 
+    return tokens
 
-def parse(filename):
-    with open(filename) as file:
-        tokens, errors = scan(file.read())
 
-    if errors:
-        exit(65)
-
+def parse(filename, log=True):
+    tokens = tokenize(filename, log=False)
     expr, errors = Parser().parseTokens(tokens[:-1])
 
     for error in errors:
@@ -37,27 +35,25 @@ def parse(filename):
     if errors or expr is None:
         exit(65)
 
-    print(AstPrinter().print(expr))
+    if log:
+        print(AstPrinter().print(expr))
+
+    return expr
 
 
-def evaluate(filename):
-    with open(filename) as file:
-        tokens, errors = scan(file.read())
-
-    if errors:
-        exit(65)
-
-    expr, errors = Parser().parseTokens(tokens[:-1])
-    if errors or expr is None:
-        exit(65)
+def evaluate(filename, log=True):
+    expr = parse(filename, log=False)
 
     ans, errors = Evaluator().evaluate(expr)
     for error in errors:
         error.report()
-
     if errors or expr is None:
         exit(65)
-    print(ans)
+
+    if log:
+        print(ans)
+
+    return ans
 
 
 def main():
