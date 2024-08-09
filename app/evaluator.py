@@ -26,6 +26,8 @@ class Evaluator(Visitor):
             case True | False:
                 return str(value).lower()
             case _:
+                if isinstance(value, float) and int(value) == value:
+                    return str(int(value))
                 return str(value)
 
     # overrides
