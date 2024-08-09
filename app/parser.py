@@ -20,7 +20,8 @@ class Parser:
             return None, [e]
 
         if tokens[0].type != "EOF":
-            return None, [ParserError(-1, " at end", "Did not consume all tokens.")]
+            print(tokens)
+            return None, [ParserError(-1, "", "Did not consume all tokens.")]
         return expr, []
 
     def expression(self, tokens: list[Token]) -> tuple[Expr, list[Token]]:
@@ -110,22 +111,14 @@ class Parser:
                 return Literal(False), tokens
             case "NIL":
                 return Literal(None), tokens
+            case "RIGHT_PAREN":
+                raise ParserError(t.line, "", "Unexpected parentheses.")
             case "LEFT_PAREN":
-                return self._get_paren(tokens)
+                expr, tokens = self.expression(tokens)
+                if not tokens:
+                    raise ParserError(-1, "", "Unmatched parentheses.")
+                elif tokens[0].type != "RIGHT_PAREN":
+                    raise ParserError(tokens[0].line, "", "Expected parentheses.")
+                return Grouping(expr), tokens[1:]
             case _:
                 raise ParserError(t.line, "", "Got non literal.")
-
-    def _get_paren(self, tokens: list[Token]):
-        level = 0
-        for i, t in enumerate(tokens):
-            if t.type == "LEFT_PAREN":
-                level += 1
-            elif t.type == "RIGHT_PAREN":
-                if level == 0:
-                    expr, _ = self.expression(tokens[:i])
-                    return (
-                        Grouping(expr),
-                        tokens[i + 1 :],
-                    )
-                level -= 1
-        raise ParserError(-1, " at end", "Unmatched parentheses.")
