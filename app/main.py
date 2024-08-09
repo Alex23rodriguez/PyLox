@@ -3,7 +3,7 @@ import sys
 sys.path.append(".")
 
 from app.evaluator import Evaluator
-from app.parser import TokenParser
+from app.parser import Parser
 from app.scanner import scan
 from app.visitors import AstPrinter
 
@@ -30,7 +30,7 @@ def parse(filename):
         exit(65)
 
     try:
-        expr = TokenParser().parseTokens(tokens[:-1])
+        expr = Parser().parseTokens(tokens[:-1])
     except AssertionError as err:
         print(f"Error: {err}", file=sys.stderr)
         exit(65)
@@ -46,7 +46,7 @@ def evaluate(filename):
         exit(65)
 
     try:
-        expr = TokenParser().parseTokens(tokens[:-1])
+        expr = Parser().parseTokens(tokens[:-1])
     except AssertionError as err:
         print(f"Error: {err}", file=sys.stderr)
         exit(65)

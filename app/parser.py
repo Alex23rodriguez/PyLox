@@ -2,7 +2,7 @@ from app.classes import Token
 from app.expressions import Binary, Expr, Grouping, Literal, Unary
 
 
-class TokenParser:
+class Parser:
     def parseTokens(self, tokens: list[Token]) -> Expr:
         assert tokens, "cannot parse empty token list"
         return self.expression(tokens)
