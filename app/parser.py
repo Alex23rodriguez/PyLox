@@ -5,14 +5,15 @@ from app.expressions import Binary, Expr, Grouping, Literal, Unary
 class Parser:
     def parseTokens(self, tokens: list[Token]) -> Expr:
         assert tokens, "cannot parse empty token list"
-        return self.expression(tokens)
+        expr, tokens = self.expression(tokens)
+        assert len(tokens) == 0, "did not consume all tokens"
+        return expr
 
-    def expression(self, tokens: list[Token]) -> Expr:
+    def expression(self, tokens: list[Token]) -> tuple[Expr, list[Token]]:
         """given a list of tokens, return the expression they represent"""
         # top of grammar, lowest precedence
         expr, tokens = self.equality(tokens)
-        assert len(tokens) == 0, "did not consume all tokens"
-        return expr
+        return expr, tokens
 
     def equality(self, tokens: list[Token]) -> tuple[Expr, list[Token]]:
         """handle equality comparison"""
